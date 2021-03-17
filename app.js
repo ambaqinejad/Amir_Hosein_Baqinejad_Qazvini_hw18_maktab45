@@ -29,6 +29,7 @@ mongoose.connect('mongodb://localhost:27017/hw18', {
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/auth', authRouter);
 
