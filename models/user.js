@@ -43,4 +43,20 @@ UserSchema.pre('save', function(next) {
     }
 })
 
+UserSchema.pre('findOneAndUpdate', function(next) {
+    const info = this;
+    bcrypt.genSalt(10, (err, salt) => {
+        if (err) {
+            return next(err)
+        }
+        bcrypt.hash(info._update.password, salt, (err, hash) => {
+            if (err) {
+                return next(err)
+            }
+            info._update.password = hash;
+            return next();
+        })
+    })
+})
+
 module.exports = mongoose.model('User', UserSchema);

@@ -5,10 +5,12 @@ const path = require('path');
 const url = require('url');
 
 const User = require(path.join(path.dirname(__dirname), 'models', 'user'));
+const sessionTools = require(path.join(path.dirname(__dirname), 'tools', 'session'));
+
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
+router.get('/', sessionTools.sessionChecker, (req, res) => {
     return res.render('auth/signUp', {
         message: req.query.message || ''
     });

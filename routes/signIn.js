@@ -5,10 +5,11 @@ const path = require('path');
 const url = require('url');
 
 const User = require(path.join(path.dirname(__dirname), 'models', 'user'));
+const sessionTools = require(path.join(path.dirname(__dirname), 'tools', 'session'));
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
+router.get('/', sessionTools.sessionChecker, (req, res) => {
     res.render('auth/signIn', {
         message: req.query.message || ''
     })
@@ -44,7 +45,7 @@ router.post('/login', (req, res) => {
             if (err) {
                 return res.redirect(url.format({
                     pathname: '/auth/signIn',
-                    query: { msg: 'Server Error.' }
+                    query: { message: 'Server Error.' }
                 }))
             }
             if (!isMatch) {
@@ -55,9 +56,8 @@ router.post('/login', (req, res) => {
                     }
                 }))
             }
-
-            // req.session.user = user;
-            console.log('OK');
+            req.session.user = user;
+            res.redirect('/user/dashboard')
         })
     })
 })
